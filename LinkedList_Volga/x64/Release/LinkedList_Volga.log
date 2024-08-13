@@ -1,0 +1,7 @@
+﻿  Main.cpp
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(21,14): error C2337: 'event_source': attribute not found
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(21,15): error C2065: 'native': undeclared identifier
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(21,15): message : missing quotes ("") around 'native'?
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(22,16): error C2337: 'event_receiver': attribute not found
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(22,17): error C2065: 'native': undeclared identifier
+D:\TestTasks\Volga\LinkedList_Volga\LinkedList_Volga\Main.h(22,17): message : missing quotes ("") around 'native'?
