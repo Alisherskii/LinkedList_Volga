@@ -7,22 +7,22 @@ void Node::RandData()
 	CreateEvent(this);
 }
 
-void Node::Subscribe(Node* inNode)
+void Node::Subscribe(shared_ptr<Node> inNode)
 {
-	if (inNode != this)
+	if (inNode.get()!= this)
 	{
 		subscriptionsAndSum[inNode] = 0;
-		hookEvent(inNode);
-		inNode->neighbors.push_back(this);
+		hookEvent(inNode.get());
+		inNode->neighbors.push_back(shared_from_this());
 		neighbors.push_back(inNode);
 	}
 }
 
-void Node::Unsubscribe(Node* inNode)
+void Node::Unsubscribe(shared_ptr<Node> inNode)
 {
 	subscriptionsAndSum.erase(inNode);
-	unhookEvent(inNode);
-	auto it = find(inNode->neighbors.begin(), inNode->neighbors.end(), this);
+	unhookEvent(inNode.get());
+	auto it = find(inNode->neighbors.begin(), inNode->neighbors.end(), shared_from_this());
 	inNode->neighbors.erase(it);
 	it = find(neighbors.begin(), neighbors.end(), inNode);
 	neighbors.erase(it);
@@ -30,7 +30,7 @@ void Node::Unsubscribe(Node* inNode)
 
 void Node::CreateNewNodeAndSubscribe(NodesNetwork *Network)
 {
-	auto newNode = new Node();
+	shared_ptr<Node> newNode(new Node());
 	Subscribe(newNode);
 	Network->nodes.push_back(newNode);
 }
@@ -39,7 +39,7 @@ void Node::CreateNewNodeAndSubscribe(NodesNetwork *Network)
 
 
 
-void NodesNetwork::addNode(Node* inNode)
+void NodesNetwork::addNode(shared_ptr<Node> inNode)
 {
 	nodes.push_back(inNode);
 }
@@ -48,30 +48,9 @@ int main()
 {
 	//Nodes and network initialization
 	int steps = 0;
-	Node* testNode1 = new Node();
-	Node* testNode2 = new Node();
-	Node* testNode3 = new Node();
-	Node* testNode4 = new Node();
-	Node* testNode5 = new Node();
-
-	testNode1->name = "Travis";
-	testNode2->name = "John";
-	testNode3->name = "Alex";
-	testNode4->name = "Sid";
-	testNode5->name = "Howie";
 	
-	testNode1->Subscribe(testNode2);
-	testNode2->Subscribe(testNode3);
-	testNode3->Subscribe(testNode4);
-	testNode4->Subscribe(testNode5);
-	testNode5->Subscribe(testNode1);
-
 	NodesNetwork* Network = new NodesNetwork();
-	Network->addNode(testNode1);
-	Network->addNode(testNode2);
-	Network->addNode(testNode3);
-	Network->addNode(testNode4);
-	Network->addNode(testNode5);
+	Network->InitializeNetwork();
 	//probabilities initialization
 	cout << "Simulation steps amount = ";
 	cin >> steps;
@@ -101,6 +80,34 @@ int main()
 	}
 	return 0;
 
+}
+
+void NodesNetwork::InitializeNetwork()
+{
+	shared_ptr<Node> testNode1(new Node());
+	shared_ptr<Node> testNode2(new Node());
+	shared_ptr<Node> testNode3(new Node());
+	shared_ptr<Node> testNode4(new Node());
+	shared_ptr<Node> testNode5(new Node());
+
+	testNode1->name = "Travis";
+	testNode2->name = "John";
+	testNode3->name = "Alex";
+	testNode4->name = "Sid";
+	testNode5->name = "Howie";
+
+	testNode1->Subscribe(testNode2);
+	testNode2->Subscribe(testNode3);
+	testNode3->Subscribe(testNode4);
+	testNode4->Subscribe(testNode5);
+	testNode5->Subscribe(testNode1);
+
+	
+	addNode(testNode1);
+	addNode(testNode2);
+	addNode(testNode3);
+	addNode(testNode4);
+	addNode(testNode5);
 }
 
 void NodesNetwork::Simulate()
